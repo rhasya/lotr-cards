@@ -16,7 +16,11 @@ export function SiteNavbar() {
         </Link>
 
         <nav className="flex items-center gap-1">
-          <Button variant="ghost" render={<Link href="/sets" />}>
+          <Button
+            variant="ghost"
+            nativeButton={false}
+            render={<Link href="/sets" />}
+          >
             Sets
           </Button>
         </nav>

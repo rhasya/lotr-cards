@@ -8,9 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { setPath, sets } from "@/lib/sets"
+import { getSets, setPath } from "@/lib/sets"
 
 export default function SetsPage() {
+  const sets = getSets()
+
   return (
     <main className="mx-auto w-full max-w-6xl px-6 py-12">
       <div className="flex flex-col gap-2">
