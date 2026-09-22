@@ -47,6 +47,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { Card, SetInfo } from "@/lib/types"
+import { translateTrait } from "@/lib/i18n"
 import { deleteCardAction, saveCardAction } from "@/app/admin/actions"
 
 const sphereStyles: Record<string, string> = {
@@ -233,6 +234,13 @@ export function AdminCardManager({
       .map((t) => t.trim())
       .filter(Boolean)
 
+    const finalTraitsEn =
+      parsedTraitsEn.length > 0
+        ? parsedTraitsEn
+        : parsedTraits.length > 0
+          ? parsedTraits.map((t) => translateTrait(t, "en"))
+          : undefined
+
     const cardPayload: Card = {
       code: formData.code.trim(),
       number: num,
@@ -245,7 +253,7 @@ export function AdminCardManager({
           ? formData.sphere
           : undefined,
       traits: parsedTraits.length > 0 ? parsedTraits : undefined,
-      traitsEn: parsedTraitsEn.length > 0 ? parsedTraitsEn : undefined,
+      traitsEn: finalTraitsEn,
       cost: formData.cost !== "" ? parseInt(formData.cost, 10) : undefined,
       threat:
         formData.threat !== "" ? parseInt(formData.threat, 10) : undefined,
@@ -310,10 +318,16 @@ export function AdminCardManager({
       const matchNameEn = card.nameEn?.toLowerCase().includes(q)
       const matchCode = card.code.toLowerCase().includes(q)
       const matchType = card.type.toLowerCase().includes(q)
-      const matchTraits = card.traits?.some((t) => t.toLowerCase().includes(q))
-      const matchTraitsEn = card.traitsEn?.some((t) =>
-        t.toLowerCase().includes(q)
-      )
+      const matchTraits = card.traits?.some((t) => {
+        const ko = t.toLowerCase()
+        const en = translateTrait(t, "en").toLowerCase()
+        return ko.includes(q) || en.includes(q)
+      })
+      const matchTraitsEn = card.traitsEn?.some((t) => {
+        const en = t.toLowerCase()
+        const ko = translateTrait(t, "ko").toLowerCase()
+        return en.includes(q) || ko.includes(q)
+      })
       if (
         !matchName &&
         !matchNameEn &&
