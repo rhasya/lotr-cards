@@ -51,23 +51,23 @@ const sphereGradients: Record<string, string> = {
   Neutral: "from-neutral-500/10 via-background to-background border-neutral-500/20",
 }
 
-function StatBox({
+function StatPill({
   label,
   value,
   icon,
 }: {
   label: string
-  value?: number
-  icon?: React.ReactNode
+  value: number
+  icon: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border bg-muted/30 p-3.5 text-center transition-colors">
-      <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+    <div className="inline-flex items-center gap-2 rounded-lg border border-border/70 bg-muted/30 px-3 py-1.5 transition-colors hover:bg-muted/50">
+      <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
         {icon}
         <span>{label}</span>
-      </div>
-      <span className="mt-1 text-2xl font-bold tabular-nums tracking-tight">
-        {value !== undefined ? value : "-"}
+      </span>
+      <span className="text-sm font-bold tabular-nums text-foreground">
+        {value}
       </span>
     </div>
   )
@@ -209,50 +209,67 @@ export function CardDetailView({
             )}
           </div>
 
-          {/* Stat Cards (3x2 Grid)
-              행 1: 위협 | 비용 | 체력
-              행 2: 의지 | 공격 | 방어
-          */}
-          <div className="space-y-2">
-            <h2 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              {UI_I18N.detail.statsSection[locale]}
-            </h2>
-            <div className="grid grid-cols-3 gap-3">
-              {/* Row 1: 위협 | 비용 | 체력 */}
-              <StatBox
-                label={STATS_I18N.threat[locale]}
-                value={card.threat}
-                icon={<FlameIcon className="size-3.5 text-orange-500" />}
-              />
-              <StatBox
-                label={STATS_I18N.cost[locale]}
-                value={card.cost}
-                icon={<CircleDollarSignIcon className="size-3.5 text-yellow-500" />}
-              />
-              <StatBox
-                label={STATS_I18N.hitpoints[locale]}
-                value={card.hitpoints}
-                icon={<HeartIcon className="size-3.5 text-rose-500" />}
-              />
+          {/* Stats Bar */}
+          {(() => {
+            const stats = [
+              {
+                key: "threat",
+                label: STATS_I18N.threat[locale],
+                value: card.threat,
+                icon: <FlameIcon className="size-3.5 text-orange-500" />,
+              },
+              {
+                key: "cost",
+                label: STATS_I18N.cost[locale],
+                value: card.cost,
+                icon: <CircleDollarSignIcon className="size-3.5 text-yellow-500" />,
+              },
+              {
+                key: "willpower",
+                label: STATS_I18N.willpower[locale],
+                value: card.willpower,
+                icon: <SunIcon className="size-3.5 text-amber-500" />,
+              },
+              {
+                key: "attack",
+                label: STATS_I18N.attack[locale],
+                value: card.attack,
+                icon: <SwordsIcon className="size-3.5 text-red-500" />,
+              },
+              {
+                key: "defense",
+                label: STATS_I18N.defense[locale],
+                value: card.defense,
+                icon: <ShieldIcon className="size-3.5 text-blue-500" />,
+              },
+              {
+                key: "hitpoints",
+                label: STATS_I18N.hitpoints[locale],
+                value: card.hitpoints,
+                icon: <HeartIcon className="size-3.5 text-rose-500" />,
+              },
+            ].filter((s): s is typeof s & { value: number } => s.value !== undefined)
 
-              {/* Row 2: 의지 | 공격 | 방어 */}
-              <StatBox
-                label={STATS_I18N.willpower[locale]}
-                value={card.willpower}
-                icon={<SunIcon className="size-3.5 text-amber-500" />}
-              />
-              <StatBox
-                label={STATS_I18N.attack[locale]}
-                value={card.attack}
-                icon={<SwordsIcon className="size-3.5 text-red-500" />}
-              />
-              <StatBox
-                label={STATS_I18N.defense[locale]}
-                value={card.defense}
-                icon={<ShieldIcon className="size-3.5 text-blue-500" />}
-              />
-            </div>
-          </div>
+            if (stats.length === 0) return null
+
+            return (
+              <div className="space-y-2">
+                <h2 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                  {UI_I18N.detail.statsSection[locale]}
+                </h2>
+                <div className="flex flex-wrap items-center gap-2">
+                  {stats.map((stat) => (
+                    <StatPill
+                      key={stat.key}
+                      label={stat.label}
+                      value={stat.value}
+                      icon={stat.icon}
+                    />
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
 
           {/* Card Text & Flavor */}
           {(text || flavor) && (
