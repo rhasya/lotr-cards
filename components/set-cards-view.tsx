@@ -77,27 +77,27 @@ export function SetCardsView({ set }: { set: Set }) {
             <TableHead>{UI_I18N.table.card[locale]}</TableHead>
             <TableHead>{UI_I18N.table.sphere[locale]}</TableHead>
             <TableHead>{UI_I18N.table.type[locale]}</TableHead>
-            <TableHead className="text-right">{UI_I18N.table.threat[locale]}</TableHead>
-            <TableHead className="text-right">{UI_I18N.table.cost[locale]}</TableHead>
-            <TableHead className="text-right" title={UI_I18N.table.willpower[locale]}>
+            <TableHead className="w-12 text-right">{UI_I18N.table.threat[locale]}</TableHead>
+            <TableHead className="w-12 text-right">{UI_I18N.table.cost[locale]}</TableHead>
+            <TableHead className="w-12 text-right" title={UI_I18N.table.willpower[locale]}>
               <span className="inline-flex justify-end">
                 <SunIcon className="size-3.5" aria-hidden="true" />
                 <span className="sr-only">{UI_I18N.table.willpower[locale]}</span>
               </span>
             </TableHead>
-            <TableHead className="text-right" title={UI_I18N.table.attack[locale]}>
+            <TableHead className="w-12 text-right" title={UI_I18N.table.attack[locale]}>
               <span className="inline-flex justify-end">
                 <SwordsIcon className="size-3.5" aria-hidden="true" />
                 <span className="sr-only">{UI_I18N.table.attack[locale]}</span>
               </span>
             </TableHead>
-            <TableHead className="text-right" title={UI_I18N.table.defense[locale]}>
+            <TableHead className="w-12 text-right" title={UI_I18N.table.defense[locale]}>
               <span className="inline-flex justify-end">
                 <ShieldIcon className="size-3.5" aria-hidden="true" />
                 <span className="sr-only">{UI_I18N.table.defense[locale]}</span>
               </span>
             </TableHead>
-            <TableHead className="text-right" title={UI_I18N.table.hitpoints[locale]}>
+            <TableHead className="w-12 text-right" title={UI_I18N.table.hitpoints[locale]}>
               <span className="inline-flex justify-end">
                 <HeartIcon className="size-3.5" aria-hidden="true" />
                 <span className="sr-only">{UI_I18N.table.hitpoints[locale]}</span>
@@ -150,22 +150,22 @@ export function SetCardsView({ set }: { set: Set }) {
                 <TableCell className="text-muted-foreground">
                   {typeName}
                 </TableCell>
-                <TableCell className="text-right tabular-nums text-muted-foreground">
+                <TableCell className="w-12 text-right tabular-nums text-muted-foreground">
                   {card.threat ?? "-"}
                 </TableCell>
-                <TableCell className="text-right tabular-nums text-muted-foreground">
+                <TableCell className="w-12 text-right tabular-nums text-muted-foreground">
                   {card.cost ?? "-"}
                 </TableCell>
-                <TableCell className="text-right tabular-nums text-muted-foreground">
+                <TableCell className="w-12 text-right tabular-nums text-muted-foreground">
                   {card.willpower ?? "-"}
                 </TableCell>
-                <TableCell className="text-right tabular-nums text-muted-foreground">
+                <TableCell className="w-12 text-right tabular-nums text-muted-foreground">
                   {card.attack ?? "-"}
                 </TableCell>
-                <TableCell className="text-right tabular-nums text-muted-foreground">
+                <TableCell className="w-12 text-right tabular-nums text-muted-foreground">
                   {card.defense ?? "-"}
                 </TableCell>
-                <TableCell className="text-right tabular-nums text-muted-foreground">
+                <TableCell className="w-12 text-right tabular-nums text-muted-foreground">
                   {card.hitpoints ?? "-"}
                 </TableCell>
                 <TableCell className="text-muted-foreground">

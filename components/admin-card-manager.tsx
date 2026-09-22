@@ -477,31 +477,31 @@ export function AdminCardManager({
             <TableRow>
               <TableHead className="w-24">코드</TableHead>
               <TableHead className="w-16">세트</TableHead>
-              <TableHead className="w-14">번호</TableHead>
+              <TableHead className="w-12 text-right">번호</TableHead>
               <TableHead>카드명</TableHead>
               <TableHead>타입</TableHead>
               <TableHead>계열</TableHead>
-              <TableHead className="text-right">위협</TableHead>
-              <TableHead className="text-right">비용</TableHead>
-              <TableHead className="text-right" title="의지">
+              <TableHead className="w-12 text-right">위협</TableHead>
+              <TableHead className="w-12 text-right">비용</TableHead>
+              <TableHead className="w-12 text-right" title="의지">
                 <span className="inline-flex justify-end">
                   <SunIcon className="size-3.5" aria-hidden="true" />
                   <span className="sr-only">의지</span>
                 </span>
               </TableHead>
-              <TableHead className="text-right" title="공격">
+              <TableHead className="w-12 text-right" title="공격">
                 <span className="inline-flex justify-end">
                   <SwordsIcon className="size-3.5" aria-hidden="true" />
                   <span className="sr-only">공격</span>
                 </span>
               </TableHead>
-              <TableHead className="text-right" title="방어">
+              <TableHead className="w-12 text-right" title="방어">
                 <span className="inline-flex justify-end">
                   <ShieldIcon className="size-3.5" aria-hidden="true" />
                   <span className="sr-only">방어</span>
                 </span>
               </TableHead>
-              <TableHead className="text-right" title="체력">
+              <TableHead className="w-12 text-right" title="체력">
                 <span className="inline-flex justify-end">
                   <HeartIcon className="size-3.5" aria-hidden="true" />
                   <span className="sr-only">체력</span>
@@ -532,7 +532,7 @@ export function AdminCardManager({
                     <TableCell className="text-xs text-muted-foreground">
                       {card.set}
                     </TableCell>
-                    <TableCell className="text-muted-foreground tabular-nums">
+                    <TableCell className="w-12 text-right text-muted-foreground tabular-nums">
                       {card.number}
                     </TableCell>
                     <TableCell>
@@ -560,22 +560,22 @@ export function AdminCardManager({
                         <span className="text-muted-foreground">-</span>
                       )}
                     </TableCell>
-                    <TableCell className="text-right text-muted-foreground tabular-nums">
+                    <TableCell className="w-12 text-right text-muted-foreground tabular-nums">
                       {card.threat ?? "-"}
                     </TableCell>
-                    <TableCell className="text-right text-muted-foreground tabular-nums">
+                    <TableCell className="w-12 text-right text-muted-foreground tabular-nums">
                       {card.cost ?? "-"}
                     </TableCell>
-                    <TableCell className="text-right text-muted-foreground tabular-nums">
+                    <TableCell className="w-12 text-right text-muted-foreground tabular-nums">
                       {card.willpower ?? "-"}
                     </TableCell>
-                    <TableCell className="text-right text-muted-foreground tabular-nums">
+                    <TableCell className="w-12 text-right text-muted-foreground tabular-nums">
                       {card.attack ?? "-"}
                     </TableCell>
-                    <TableCell className="text-right text-muted-foreground tabular-nums">
+                    <TableCell className="w-12 text-right text-muted-foreground tabular-nums">
                       {card.defense ?? "-"}
                     </TableCell>
-                    <TableCell className="text-right text-muted-foreground tabular-nums">
+                    <TableCell className="w-12 text-right text-muted-foreground tabular-nums">
                       {card.hitpoints ?? "-"}
                     </TableCell>
                     <TableCell className="text-muted-foreground">

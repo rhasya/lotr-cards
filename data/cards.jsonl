@@ -28,3 +28,8 @@
 {"code":"RCS-025","number":25,"name":"불굴의 결의","nameEn":"Grim Resolve","type":"Event","sphere":"Leadership","cost":5,"set":"RCS"}
 {"code":"RCS-026","number":26,"name":"곤도르의 섭정","nameEn":"Steward of Gondor","type":"Attachment","sphere":"Leadership","traits":["곤도르","칭호"],"traitsEn":["Gondor","Title"],"unique":true,"cost":2,"set":"RCS"}
 {"code":"RCS-027","number":27,"name":"켈레브리안의 보석","nameEn":"Celebrían's Stone","type":"Attachment","sphere":"Leadership","traits":["유물","물품"],"traitsEn":["Artifact","Item"],"unique":true,"cost":2,"set":"RCS"}
+{"code":"RCS-028","number":28,"name":"노련한 도끼병","nameEn":"Veteran Axehand","type":"Ally","sphere":"Tactics","traits":["난쟁이","전사"],"traitsEn":["Dwarf","Warrior"],"cost":2,"willpower":0,"attack":2,"defense":1,"hitpoints":2,"set":"RCS"}
+{"code":"RCS-029","number":29,"name":"곤도르 창병","nameEn":"Gondorian Spearman","type":"Ally","sphere":"Tactics","traits":["곤도르","전사"],"traitsEn":["Gondor","Warrior"],"cost":2,"willpower":0,"attack":1,"defense":1,"hitpoints":1,"set":"RCS"}
+{"code":"RCS-030","number":30,"name":"기마 궁수","nameEn":"Horseback Archer","type":"Ally","sphere":"Tactics","traits":["로한","궁수"],"traitsEn":["Rohan","Archer"],"cost":3,"willpower":0,"attack":2,"defense":1,"hitpoints":2,"set":"RCS"}
+{"code":"RCS-031","number":31,"name":"베오른","nameEn":"Beorn","type":"Ally","sphere":"Tactics","traits":["베오른족","전사"],"traitsEn":["Beorning","Warrior"],"unique":true,"cost":6,"willpower":1,"attack":3,"defense":3,"hitpoints":6,"set":"RCS"}
+{"code":"RCS-032","number":32,"name":"검술 숙련","nameEn":"Blade Mastery","type":"Event","sphere":"Tactics","cost":1,"set":"RCS"}
