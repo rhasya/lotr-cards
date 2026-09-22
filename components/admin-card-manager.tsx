@@ -47,7 +47,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { Card, SetInfo } from "@/lib/types"
+import { useLanguage } from "@/components/language-provider"
 import {
+  getCardTraits,
   getSphereName,
   getTypeName,
   normalizeSphere,
@@ -125,6 +127,7 @@ export function AdminCardManager({
   initialCards,
   sets,
 }: AdminCardManagerProps) {
+  const { locale } = useLanguage()
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
 
@@ -478,32 +481,33 @@ export function AdminCardManager({
               <TableHead>카드명</TableHead>
               <TableHead>타입</TableHead>
               <TableHead>계열</TableHead>
-              <TableHead className="text-right">비용</TableHead>
               <TableHead className="text-right">위협</TableHead>
-              <TableHead className="text-right">
-                <span className="inline-flex items-center gap-1">
+              <TableHead className="text-right">비용</TableHead>
+              <TableHead className="text-right" title="의지">
+                <span className="inline-flex justify-end">
                   <SunIcon className="size-3.5" aria-hidden="true" />
-                  의지
+                  <span className="sr-only">의지</span>
                 </span>
               </TableHead>
-              <TableHead className="text-right">
-                <span className="inline-flex items-center gap-1">
+              <TableHead className="text-right" title="공격">
+                <span className="inline-flex justify-end">
                   <SwordsIcon className="size-3.5" aria-hidden="true" />
-                  공격
+                  <span className="sr-only">공격</span>
                 </span>
               </TableHead>
-              <TableHead className="text-right">
-                <span className="inline-flex items-center gap-1">
+              <TableHead className="text-right" title="방어">
+                <span className="inline-flex justify-end">
                   <ShieldIcon className="size-3.5" aria-hidden="true" />
-                  방어
+                  <span className="sr-only">방어</span>
                 </span>
               </TableHead>
-              <TableHead className="text-right">
-                <span className="inline-flex items-center gap-1">
+              <TableHead className="text-right" title="체력">
+                <span className="inline-flex justify-end">
                   <HeartIcon className="size-3.5" aria-hidden="true" />
-                  체력
+                  <span className="sr-only">체력</span>
                 </span>
               </TableHead>
+              <TableHead>특성</TableHead>
               <TableHead className="w-24 text-center">관리</TableHead>
             </TableRow>
           </TableHeader>
@@ -511,68 +515,73 @@ export function AdminCardManager({
             {filteredCards.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={13}
+                  colSpan={14}
                   className="h-32 text-center text-muted-foreground"
                 >
                   검색 조건에 맞는 카드가 없습니다.
                 </TableCell>
               </TableRow>
             ) : (
-              filteredCards.map((card) => (
-                <TableRow key={card.code}>
-                  <TableCell className="font-mono text-xs font-semibold">
-                    {card.code}
-                  </TableCell>
-                  <TableCell className="text-xs text-muted-foreground">
-                    {card.set}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground tabular-nums">
-                    {card.number}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1.5 font-medium">
-                      {card.unique && <UniqueMark className="text-xs" />}
-                      <span>{card.name}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {getTypeName(card.type, "ko")}
-                  </TableCell>
-                  <TableCell>
-                    {card.sphere ? (
-                      <Badge
-                        variant="outline"
-                        className={
-                          sphereStyles[
-                            normalizeSphere(card.sphere) ?? card.sphere
-                          ]
-                        }
-                      >
-                        {getSphereName(card.sphere, "ko")}
-                      </Badge>
-                    ) : (
-                      <span className="text-muted-foreground">-</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right text-muted-foreground tabular-nums">
-                    {card.cost ?? "-"}
-                  </TableCell>
-                  <TableCell className="text-right text-muted-foreground tabular-nums">
-                    {card.threat ?? "-"}
-                  </TableCell>
-                  <TableCell className="text-right text-muted-foreground tabular-nums">
-                    {card.willpower ?? "-"}
-                  </TableCell>
-                  <TableCell className="text-right text-muted-foreground tabular-nums">
-                    {card.attack ?? "-"}
-                  </TableCell>
-                  <TableCell className="text-right text-muted-foreground tabular-nums">
-                    {card.defense ?? "-"}
-                  </TableCell>
-                  <TableCell className="text-right text-muted-foreground tabular-nums">
-                    {card.hitpoints ?? "-"}
-                  </TableCell>
-                  <TableCell className="text-center">
+              filteredCards.map((card) => {
+                const traits = getCardTraits(card, locale)
+                return (
+                  <TableRow key={card.code}>
+                    <TableCell className="font-mono text-xs font-semibold">
+                      {card.code}
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {card.set}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground tabular-nums">
+                      {card.number}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1.5 font-medium">
+                        {card.unique && <UniqueMark className="text-xs" />}
+                        <span>{card.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {getTypeName(card.type, "ko")}
+                    </TableCell>
+                    <TableCell>
+                      {card.sphere ? (
+                        <Badge
+                          variant="outline"
+                          className={
+                            sphereStyles[
+                              normalizeSphere(card.sphere) ?? card.sphere
+                            ]
+                          }
+                        >
+                          {getSphereName(card.sphere, "ko")}
+                        </Badge>
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right text-muted-foreground tabular-nums">
+                      {card.threat ?? "-"}
+                    </TableCell>
+                    <TableCell className="text-right text-muted-foreground tabular-nums">
+                      {card.cost ?? "-"}
+                    </TableCell>
+                    <TableCell className="text-right text-muted-foreground tabular-nums">
+                      {card.willpower ?? "-"}
+                    </TableCell>
+                    <TableCell className="text-right text-muted-foreground tabular-nums">
+                      {card.attack ?? "-"}
+                    </TableCell>
+                    <TableCell className="text-right text-muted-foreground tabular-nums">
+                      {card.defense ?? "-"}
+                    </TableCell>
+                    <TableCell className="text-right text-muted-foreground tabular-nums">
+                      {card.hitpoints ?? "-"}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {traits.length > 0 ? traits.join(", ") : "-"}
+                    </TableCell>
+                    <TableCell className="text-center">
                     <div className="flex items-center justify-center gap-1">
                       <Button
                         variant="ghost"
@@ -594,7 +603,7 @@ export function AdminCardManager({
                     </div>
                   </TableCell>
                 </TableRow>
-              ))
+              )})
             )}
           </TableBody>
         </Table>

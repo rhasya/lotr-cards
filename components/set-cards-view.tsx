@@ -24,6 +24,7 @@ import { useLanguage } from "@/components/language-provider"
 import {
   getCardDisplayName,
   getCardSubName,
+  getCardTraits,
   getSetName,
   getSphereName,
   getTypeName,
@@ -77,36 +78,39 @@ export function SetCardsView({ set }: { set: Set }) {
             <TableHead>{UI_I18N.table.sphere[locale]}</TableHead>
             <TableHead>{UI_I18N.table.type[locale]}</TableHead>
             <TableHead className="text-right">{UI_I18N.table.threat[locale]}</TableHead>
-            <TableHead className="text-right">
-              <span className="inline-flex items-center gap-1">
+            <TableHead className="text-right">{UI_I18N.table.cost[locale]}</TableHead>
+            <TableHead className="text-right" title={UI_I18N.table.willpower[locale]}>
+              <span className="inline-flex justify-end">
                 <SunIcon className="size-3.5" aria-hidden="true" />
-                {UI_I18N.table.willpower[locale]}
+                <span className="sr-only">{UI_I18N.table.willpower[locale]}</span>
               </span>
             </TableHead>
-            <TableHead className="text-right">
-              <span className="inline-flex items-center gap-1">
+            <TableHead className="text-right" title={UI_I18N.table.attack[locale]}>
+              <span className="inline-flex justify-end">
                 <SwordsIcon className="size-3.5" aria-hidden="true" />
-                {UI_I18N.table.attack[locale]}
+                <span className="sr-only">{UI_I18N.table.attack[locale]}</span>
               </span>
             </TableHead>
-            <TableHead className="text-right">
-              <span className="inline-flex items-center gap-1">
+            <TableHead className="text-right" title={UI_I18N.table.defense[locale]}>
+              <span className="inline-flex justify-end">
                 <ShieldIcon className="size-3.5" aria-hidden="true" />
-                {UI_I18N.table.defense[locale]}
+                <span className="sr-only">{UI_I18N.table.defense[locale]}</span>
               </span>
             </TableHead>
-            <TableHead className="text-right">
-              <span className="inline-flex items-center gap-1">
+            <TableHead className="text-right" title={UI_I18N.table.hitpoints[locale]}>
+              <span className="inline-flex justify-end">
                 <HeartIcon className="size-3.5" aria-hidden="true" />
-                {UI_I18N.table.hitpoints[locale]}
+                <span className="sr-only">{UI_I18N.table.hitpoints[locale]}</span>
               </span>
             </TableHead>
+            <TableHead>{UI_I18N.table.traits[locale]}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {set.cards.map((card) => {
             const displayName = getCardDisplayName(card, locale)
             const subName = getCardSubName(card, locale)
+            const traits = getCardTraits(card, locale)
             const sphereKey = card.sphere ? normalizeSphere(card.sphere) : undefined
             const sphereName = card.sphere
               ? getSphereName(card.sphere, locale)
@@ -150,6 +154,9 @@ export function SetCardsView({ set }: { set: Set }) {
                   {card.threat ?? "-"}
                 </TableCell>
                 <TableCell className="text-right tabular-nums text-muted-foreground">
+                  {card.cost ?? "-"}
+                </TableCell>
+                <TableCell className="text-right tabular-nums text-muted-foreground">
                   {card.willpower ?? "-"}
                 </TableCell>
                 <TableCell className="text-right tabular-nums text-muted-foreground">
@@ -160,6 +167,9 @@ export function SetCardsView({ set }: { set: Set }) {
                 </TableCell>
                 <TableCell className="text-right tabular-nums text-muted-foreground">
                   {card.hitpoints ?? "-"}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {traits.length > 0 ? traits.join(", ") : "-"}
                 </TableCell>
               </TableRow>
             )

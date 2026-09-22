@@ -44,6 +44,7 @@ export const cardSchema = z.preprocess(
         const typeMap: Record<string, string> = {
           영웅: "Hero",
           동료: "Ally",
+          부착물: "Attachment",
           부속: "Attachment",
           사건: "Event",
           적: "Enemy",

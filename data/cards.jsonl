@@ -26,3 +26,5 @@
 {"code":"RCS-023","number":23,"name":"기습 공격","nameEn":"Sneak Attack","type":"Event","sphere":"Leadership","cost":1,"set":"RCS"}
 {"code":"RCS-024","number":24,"name":"용맹한 희생","nameEn":"Valiant Sacrifice","type":"Event","sphere":"Leadership","cost":1,"set":"RCS"}
 {"code":"RCS-025","number":25,"name":"불굴의 결의","nameEn":"Grim Resolve","type":"Event","sphere":"Leadership","cost":5,"set":"RCS"}
+{"code":"RCS-026","number":26,"name":"곤도르의 섭정","nameEn":"Steward of Gondor","type":"Attachment","sphere":"Leadership","traits":["곤도르","칭호"],"traitsEn":["Gondor","Title"],"unique":true,"cost":2,"set":"RCS"}
+{"code":"RCS-027","number":27,"name":"켈레브리안의 보석","nameEn":"Celebrían's Stone","type":"Attachment","sphere":"Leadership","traits":["유물","물품"],"traitsEn":["Artifact","Item"],"unique":true,"cost":2,"set":"RCS"}

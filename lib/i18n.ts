@@ -25,7 +25,7 @@ export const SPHERES_I18N: Record<string, SphereDef> = {
 export const CARD_TYPES_I18N: Record<string, CardTypeDef> = {
   Hero: { ko: "영웅", en: "Hero", aliases: ["영웅"] },
   Ally: { ko: "동료", en: "Ally", aliases: ["동료"] },
-  Attachment: { ko: "부속", en: "Attachment", aliases: ["부속"] },
+  Attachment: { ko: "부착물", en: "Attachment", aliases: ["부착물", "부속"] },
   Event: { ko: "사건", en: "Event", aliases: ["사건"] },
   Enemy: { ko: "적", en: "Enemy", aliases: ["적"] },
   Location: { ko: "장소", en: "Location", aliases: ["장소"] },
@@ -150,6 +150,7 @@ export const UI_I18N = {
     card: { ko: "카드", en: "Card" },
     sphere: { ko: "계열", en: "Sphere" },
     type: { ko: "타입", en: "Type" },
+    traits: { ko: "특성", en: "Traits" },
     threat: { ko: "위협", en: "Threat" },
     willpower: { ko: "의지력", en: "Willpower" },
     attack: { ko: "공격력", en: "Attack" },
