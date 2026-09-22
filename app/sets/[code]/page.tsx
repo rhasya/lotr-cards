@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ChevronLeftIcon } from "lucide-react"
+import { ChevronLeftIcon, HeartIcon, ShieldIcon, SunIcon, SwordsIcon } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -70,6 +70,31 @@ export default async function SetPage({
             <TableHead>카드</TableHead>
             <TableHead>계열</TableHead>
             <TableHead>타입</TableHead>
+            <TableHead className="text-right">위협</TableHead>
+            <TableHead className="text-right">
+              <span className="inline-flex items-center gap-1">
+                <SunIcon className="size-3.5" aria-hidden="true" />
+                의지력
+              </span>
+            </TableHead>
+            <TableHead className="text-right">
+              <span className="inline-flex items-center gap-1">
+                <SwordsIcon className="size-3.5" aria-hidden="true" />
+                공격력
+              </span>
+            </TableHead>
+            <TableHead className="text-right">
+              <span className="inline-flex items-center gap-1">
+                <ShieldIcon className="size-3.5" aria-hidden="true" />
+                방어력
+              </span>
+            </TableHead>
+            <TableHead className="text-right">
+              <span className="inline-flex items-center gap-1">
+                <HeartIcon className="size-3.5" aria-hidden="true" />
+                체력
+              </span>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -87,6 +112,21 @@ export default async function SetPage({
               </TableCell>
               <TableCell className="text-muted-foreground">
                 {card.type}
+              </TableCell>
+              <TableCell className="text-right tabular-nums text-muted-foreground">
+                {card.threat ?? "-"}
+              </TableCell>
+              <TableCell className="text-right tabular-nums text-muted-foreground">
+                {card.willpower ?? "-"}
+              </TableCell>
+              <TableCell className="text-right tabular-nums text-muted-foreground">
+                {card.attack ?? "-"}
+              </TableCell>
+              <TableCell className="text-right tabular-nums text-muted-foreground">
+                {card.defense ?? "-"}
+              </TableCell>
+              <TableCell className="text-right tabular-nums text-muted-foreground">
+                {card.hitpoints ?? "-"}
               </TableCell>
             </TableRow>
           ))}

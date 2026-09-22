@@ -16,6 +16,12 @@ const cardSchema = z.object({
   name: z.string(),
   type: z.string(),
   sphere: z.string().optional(),
+  cost: z.number().int().optional(),
+  threat: z.number().int().optional(),
+  willpower: z.number().int().optional(),
+  attack: z.number().int().optional(),
+  defense: z.number().int().optional(),
+  hitpoints: z.number().int().optional(),
   set: z.string(),
 })
 
