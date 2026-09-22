@@ -100,7 +100,14 @@ export default async function SetPage({
         <TableBody>
           {set.cards.map((card) => (
             <TableRow key={card.code}>
-              <TableCell className="font-medium">{card.name}</TableCell>
+              <TableCell className="font-medium">
+                <Link
+                  href={`/cards/${card.code.toLowerCase()}`}
+                  className="hover:underline"
+                >
+                  {card.name}
+                </Link>
+              </TableCell>
               <TableCell>
                 {card.sphere ? (
                   <Badge variant="outline" className={sphereStyles[card.sphere]}>

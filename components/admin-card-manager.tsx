@@ -81,6 +81,7 @@ type CardFormData = {
   name: string
   type: string
   sphere: string
+  traits: string
   cost: string
   threat: string
   willpower: string
@@ -96,6 +97,7 @@ const emptyForm: CardFormData = {
   name: "",
   type: "영웅",
   sphere: "none",
+  traits: "",
   cost: "",
   threat: "",
   willpower: "",
@@ -153,6 +155,7 @@ export function AdminCardManager({
       name: card.name,
       type: card.type,
       sphere: card.sphere || "none",
+      traits: card.traits ? card.traits.join(", ") : "",
       cost: card.cost !== undefined ? String(card.cost) : "",
       threat: card.threat !== undefined ? String(card.threat) : "",
       willpower: card.willpower !== undefined ? String(card.willpower) : "",
@@ -214,6 +217,11 @@ export function AdminCardManager({
       return
     }
 
+    const parsedTraits = formData.traits
+      .split(/[,.]/)
+      .map((t) => t.trim())
+      .filter(Boolean)
+
     const cardPayload: Card = {
       code: formData.code.trim(),
       number: num,
@@ -224,6 +232,7 @@ export function AdminCardManager({
         formData.sphere && formData.sphere !== "none"
           ? formData.sphere
           : undefined,
+      traits: parsedTraits.length > 0 ? parsedTraits : undefined,
       cost: formData.cost !== "" ? parseInt(formData.cost, 10) : undefined,
       threat:
         formData.threat !== "" ? parseInt(formData.threat, 10) : undefined,
@@ -287,7 +296,8 @@ export function AdminCardManager({
       const matchName = card.name.toLowerCase().includes(q)
       const matchCode = card.code.toLowerCase().includes(q)
       const matchType = card.type.toLowerCase().includes(q)
-      if (!matchName && !matchCode && !matchType) return false
+      const matchTraits = card.traits?.some((t) => t.toLowerCase().includes(q))
+      if (!matchName && !matchCode && !matchType && !matchTraits) return false
     }
     return true
   })
@@ -313,7 +323,7 @@ export function AdminCardManager({
         <div className="relative min-w-[200px] flex-1">
           <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="카드명, 코드, 타입 검색..."
+            placeholder="카드명, 코드, 타입, 특성 검색..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-8"
@@ -667,6 +677,18 @@ export function AdminCardManager({
                     </Select>
                   </Field>
                 </div>
+
+                <Field>
+                  <FieldLabel htmlFor="card-traits">특성 (쉼표로 구분)</FieldLabel>
+                  <Input
+                    id="card-traits"
+                    value={formData.traits}
+                    onChange={(e) =>
+                      setFormData((p) => ({ ...p, traits: e.target.value }))
+                    }
+                    placeholder="예: 두네다인, 귀족, 순찰자"
+                  />
+                </Field>
 
                 {/* Stats Grid */}
                 <div className="rounded-lg border bg-muted/30 p-3">

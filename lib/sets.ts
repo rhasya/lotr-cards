@@ -10,20 +10,48 @@ const setSchema = z.object({
   name: z.string(),
 })
 
-export const cardSchema = z.object({
-  code: z.string().min(1, "카드 코드를 입력해주세요"),
-  number: z.number().int(),
-  name: z.string().min(1, "카드명을 입력해주세요"),
-  type: z.string().min(1, "타입을 입력해주세요"),
-  sphere: z.string().optional(),
-  cost: z.number().int().optional(),
-  threat: z.number().int().optional(),
-  willpower: z.number().int().optional(),
-  attack: z.number().int().optional(),
-  defense: z.number().int().optional(),
-  hitpoints: z.number().int().optional(),
-  set: z.string().min(1, "세트를 선택해주세요"),
-})
+export const cardSchema = z.preprocess(
+  (input) => {
+    if (typeof input === "object" && input !== null) {
+      const raw = input as Record<string, unknown>
+      if (typeof raw.traits === "string") {
+        const parsed = raw.traits
+          .split(/[,.]/)
+          .map((s) => s.trim())
+          .filter(Boolean)
+        return { ...raw, traits: parsed.length > 0 ? parsed : undefined }
+      }
+      if (raw.trait !== undefined && raw.traits === undefined) {
+        if (Array.isArray(raw.trait)) {
+          return { ...raw, traits: raw.trait }
+        }
+        if (typeof raw.trait === "string") {
+          const parsed = raw.trait
+            .split(/[,.]/)
+            .map((s) => s.trim())
+            .filter(Boolean)
+          return { ...raw, traits: parsed.length > 0 ? parsed : undefined }
+        }
+      }
+    }
+    return input
+  },
+  z.object({
+    code: z.string().min(1, "카드 코드를 입력해주세요"),
+    number: z.number().int(),
+    name: z.string().min(1, "카드명을 입력해주세요"),
+    type: z.string().min(1, "타입을 입력해주세요"),
+    sphere: z.string().optional(),
+    traits: z.array(z.string()).optional(),
+    cost: z.number().int().optional(),
+    threat: z.number().int().optional(),
+    willpower: z.number().int().optional(),
+    attack: z.number().int().optional(),
+    defense: z.number().int().optional(),
+    hitpoints: z.number().int().optional(),
+    set: z.string().min(1, "세트를 선택해주세요"),
+  })
+)
 
 export type SetInfo = z.infer<typeof setSchema>
 export type Card = z.infer<typeof cardSchema>
@@ -122,6 +150,18 @@ export function getSet(code: string): Set | undefined {
     return undefined
   }
   return { ...set, cards: cardsBySet.get(code.toLowerCase()) ?? [] }
+}
+
+export function getCard(
+  code: string
+): { card: Card; set?: SetInfo } | undefined {
+  const { allCards, setsByCode } = getData()
+  const card = allCards.find((c) => c.code.toLowerCase() === code.toLowerCase())
+  if (!card) {
+    return undefined
+  }
+  const set = setsByCode.get(card.set.toLowerCase())
+  return { card, set }
 }
 
 export function setPath(code: string): string {
