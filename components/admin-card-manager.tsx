@@ -47,30 +47,36 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { Card, SetInfo } from "@/lib/types"
-import { translateTrait } from "@/lib/i18n"
+import {
+  getSphereName,
+  getTypeName,
+  normalizeSphere,
+  normalizeType,
+  translateTrait,
+} from "@/lib/i18n"
 import { UniqueMark } from "@/components/unique-mark"
 import { deleteCardAction, saveCardAction } from "@/app/admin/actions"
 
 const sphereStyles: Record<string, string> = {
-  지도력:
+  Leadership:
     "border-purple-200 bg-purple-100 text-purple-700 dark:border-purple-900 dark:bg-purple-950 dark:text-purple-300",
-  지식: "border-green-200 bg-green-100 text-green-700 dark:border-green-900 dark:bg-green-950 dark:text-green-300",
-  정신: "border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-900 dark:bg-blue-950 dark:text-blue-300",
-  전술: "border-red-200 bg-red-100 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300",
-  중립: "border-neutral-200 bg-neutral-100 text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300",
+  Lore: "border-green-200 bg-green-100 text-green-700 dark:border-green-900 dark:bg-green-950 dark:text-green-300",
+  Spirit: "border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-900 dark:bg-blue-950 dark:text-blue-300",
+  Tactics: "border-red-200 bg-red-100 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300",
+  Neutral: "border-neutral-200 bg-neutral-100 text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300",
 }
 
 const CARD_TYPES = [
-  "영웅",
-  "동료",
-  "부속",
-  "사건",
-  "적",
-  "장소",
-  "배반",
-  "퀘스트",
+  "Hero",
+  "Ally",
+  "Attachment",
+  "Event",
+  "Enemy",
+  "Location",
+  "Treachery",
+  "Quest",
 ]
-const SPHERES = ["지도력", "전술", "정신", "지식", "중립"]
+const SPHERES = ["Leadership", "Tactics", "Spirit", "Lore", "Neutral"]
 
 interface AdminCardManagerProps {
   initialCards: Card[]
@@ -101,11 +107,11 @@ const emptyForm: CardFormData = {
   number: "",
   name: "",
   nameEn: "",
-  type: "영웅",
+  type: "Hero",
   sphere: "none",
   traits: "",
   traitsEn: "",
-  unique: true,
+  unique: false,
   cost: "",
   threat: "",
   willpower: "",
@@ -162,8 +168,8 @@ export function AdminCardManager({
       number: String(card.number),
       name: card.name,
       nameEn: card.nameEn || "",
-      type: card.type,
-      sphere: card.sphere || "none",
+      type: normalizeType(card.type),
+      sphere: card.sphere ? (normalizeSphere(card.sphere) ?? card.sphere) : "none",
       traits: card.traits ? card.traits.join(", ") : "",
       traitsEn: card.traitsEn ? card.traitsEn.join(", ") : "",
       unique: Boolean(card.unique),
@@ -314,15 +320,25 @@ export function AdminCardManager({
       return false
     }
     if (sphereFilter !== "all") {
-      if (sphereFilter === "none" && card.sphere) return false
-      if (sphereFilter !== "none" && card.sphere !== sphereFilter) return false
+      const cardSphereKey = card.sphere ? normalizeSphere(card.sphere) : undefined
+      if (sphereFilter === "none" && cardSphereKey) return false
+      if (sphereFilter !== "none" && cardSphereKey !== sphereFilter) return false
     }
     if (search.trim()) {
       const q = search.trim().toLowerCase()
       const matchName = card.name.toLowerCase().includes(q)
       const matchNameEn = card.nameEn?.toLowerCase().includes(q)
       const matchCode = card.code.toLowerCase().includes(q)
-      const matchType = card.type.toLowerCase().includes(q)
+      const matchType =
+        card.type.toLowerCase().includes(q) ||
+        getTypeName(card.type, "ko").toLowerCase().includes(q) ||
+        getTypeName(card.type, "en").toLowerCase().includes(q)
+      const matchSphere =
+        (card.sphere && card.sphere.toLowerCase().includes(q)) ||
+        (card.sphere &&
+          getSphereName(card.sphere, "ko").toLowerCase().includes(q)) ||
+        (card.sphere &&
+          getSphereName(card.sphere, "en").toLowerCase().includes(q))
       const matchTraits = card.traits?.some((t) => {
         const ko = t.toLowerCase()
         const en = translateTrait(t, "en").toLowerCase()
@@ -338,6 +354,7 @@ export function AdminCardManager({
         !matchNameEn &&
         !matchCode &&
         !matchType &&
+        !matchSphere &&
         !matchTraits &&
         !matchTraitsEn
       )
@@ -413,7 +430,7 @@ export function AdminCardManager({
                 {(val: string | null) => {
                   if (val === "all" || !val) return "전체 계열"
                   if (val === "none") return "계열 없음"
-                  return val
+                  return getSphereName(val, "ko")
                 }}
               </SelectValue>
             </SelectTrigger>
@@ -422,7 +439,7 @@ export function AdminCardManager({
                 <SelectItem value="all">전체 계열</SelectItem>
                 {SPHERES.map((sphere) => (
                   <SelectItem key={sphere} value={sphere}>
-                    {sphere}
+                    {getSphereName(sphere, "ko")}
                   </SelectItem>
                 ))}
                 <SelectItem value="none">계열 없음</SelectItem>
@@ -517,25 +534,21 @@ export function AdminCardManager({
                       {card.unique && <UniqueMark className="text-xs" />}
                       <span>{card.name}</span>
                     </div>
-                    {card.nameEn && (
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        {card.unique && (
-                          <UniqueMark className="text-[10px] text-muted-foreground/70" />
-                        )}
-                        <span>{card.nameEn}</span>
-                      </div>
-                    )}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {card.type}
+                    {getTypeName(card.type, "ko")}
                   </TableCell>
                   <TableCell>
                     {card.sphere ? (
                       <Badge
                         variant="outline"
-                        className={sphereStyles[card.sphere]}
+                        className={
+                          sphereStyles[
+                            normalizeSphere(card.sphere) ?? card.sphere
+                          ]
+                        }
                       >
-                        {card.sphere}
+                        {getSphereName(card.sphere, "ko")}
                       </Badge>
                     ) : (
                       <span className="text-muted-foreground">-</span>
@@ -706,14 +719,16 @@ export function AdminCardManager({
                     >
                       <SelectTrigger id="card-type" className="w-full">
                         <SelectValue placeholder="타입 선택">
-                          {(val: string | null) => val || "선택"}
+                          {(val: string | null) =>
+                            val ? getTypeName(val, "ko") : "선택"
+                          }
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           {CARD_TYPES.map((t) => (
                             <SelectItem key={t} value={t}>
-                              {t}
+                              {getTypeName(t, "ko")}
                             </SelectItem>
                           ))}
                         </SelectGroup>
@@ -733,7 +748,7 @@ export function AdminCardManager({
                         <SelectValue placeholder="계열 선택">
                           {(val: string | null) => {
                             if (!val || val === "none") return "계열 없음"
-                            return val
+                            return getSphereName(val, "ko")
                           }}
                         </SelectValue>
                       </SelectTrigger>
@@ -742,7 +757,7 @@ export function AdminCardManager({
                           <SelectItem value="none">계열 없음</SelectItem>
                           {SPHERES.map((s) => (
                             <SelectItem key={s} value={s}>
-                              {s}
+                              {getSphereName(s, "ko")}
                             </SelectItem>
                           ))}
                         </SelectGroup>

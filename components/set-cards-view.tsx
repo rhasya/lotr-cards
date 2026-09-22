@@ -27,16 +27,18 @@ import {
   getSetName,
   getSphereName,
   getTypeName,
+  normalizeSphere,
   UI_I18N,
 } from "@/lib/i18n"
 import type { Set } from "@/lib/types"
 
 const sphereStyles: Record<string, string> = {
-  지도력:
+  Leadership:
     "border-purple-200 bg-purple-100 text-purple-700 dark:border-purple-900 dark:bg-purple-950 dark:text-purple-300",
-  지식: "border-green-200 bg-green-100 text-green-700 dark:border-green-900 dark:bg-green-950 dark:text-green-300",
-  정신: "border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-900 dark:bg-blue-950 dark:text-blue-300",
-  전술: "border-red-200 bg-red-100 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300",
+  Lore: "border-green-200 bg-green-100 text-green-700 dark:border-green-900 dark:bg-green-950 dark:text-green-300",
+  Spirit: "border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-900 dark:bg-blue-950 dark:text-blue-300",
+  Tactics: "border-red-200 bg-red-100 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300",
+  Neutral: "border-neutral-200 bg-neutral-100 text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300",
 }
 
 export function SetCardsView({ set }: { set: Set }) {
@@ -105,6 +107,7 @@ export function SetCardsView({ set }: { set: Set }) {
           {set.cards.map((card) => {
             const displayName = getCardDisplayName(card, locale)
             const subName = getCardSubName(card, locale)
+            const sphereKey = card.sphere ? normalizeSphere(card.sphere) : undefined
             const sphereName = card.sphere
               ? getSphereName(card.sphere, locale)
               : undefined
@@ -129,10 +132,10 @@ export function SetCardsView({ set }: { set: Set }) {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {card.sphere && sphereName ? (
+                  {sphereKey && sphereName ? (
                     <Badge
                       variant="outline"
-                      className={sphereStyles[card.sphere]}
+                      className={sphereStyles[sphereKey]}
                     >
                       {sphereName}
                     </Badge>

@@ -2,23 +2,35 @@ import type { Card, SetInfo } from "@/lib/types"
 
 export type Locale = "ko" | "en"
 
-export const SPHERES_I18N: Record<string, { ko: string; en: string }> = {
-  지도력: { ko: "지도력", en: "Leadership" },
-  전술: { ko: "전술", en: "Tactics" },
-  정신: { ko: "정신", en: "Spirit" },
-  지식: { ko: "지식", en: "Lore" },
-  중립: { ko: "중립", en: "Neutral" },
+export type SphereDef = {
+  ko: string
+  en: string
+  aliases?: string[]
 }
 
-export const CARD_TYPES_I18N: Record<string, { ko: string; en: string }> = {
-  영웅: { ko: "영웅", en: "Hero" },
-  동료: { ko: "동료", en: "Ally" },
-  부속: { ko: "부속", en: "Attachment" },
-  사건: { ko: "사건", en: "Event" },
-  적: { ko: "적", en: "Enemy" },
-  장소: { ko: "장소", en: "Location" },
-  배반: { ko: "배반", en: "Treachery" },
-  퀘스트: { ko: "퀘스트", en: "Quest" },
+export type CardTypeDef = {
+  ko: string
+  en: string
+  aliases?: string[]
+}
+
+export const SPHERES_I18N: Record<string, SphereDef> = {
+  Leadership: { ko: "지도력", en: "Leadership", aliases: ["지도력"] },
+  Tactics: { ko: "전술", en: "Tactics", aliases: ["전술"] },
+  Spirit: { ko: "정신", en: "Spirit", aliases: ["정신"] },
+  Lore: { ko: "지식", en: "Lore", aliases: ["지식"] },
+  Neutral: { ko: "중립", en: "Neutral", aliases: ["중립"] },
+}
+
+export const CARD_TYPES_I18N: Record<string, CardTypeDef> = {
+  Hero: { ko: "영웅", en: "Hero", aliases: ["영웅"] },
+  Ally: { ko: "동료", en: "Ally", aliases: ["동료"] },
+  Attachment: { ko: "부속", en: "Attachment", aliases: ["부속"] },
+  Event: { ko: "사건", en: "Event", aliases: ["사건"] },
+  Enemy: { ko: "적", en: "Enemy", aliases: ["적"] },
+  Location: { ko: "장소", en: "Location", aliases: ["장소"] },
+  Treachery: { ko: "배반", en: "Treachery", aliases: ["배반"] },
+  Quest: { ko: "퀘스트", en: "Quest", aliases: ["퀘스트"] },
 }
 
 export const STATS_I18N: Record<string, { ko: string; en: string }> = {
@@ -219,13 +231,49 @@ export function getCardTraits(card: Card, locale: Locale): string[] {
   return (card.traitsEn ?? []).map((t) => translateTrait(t, "ko"))
 }
 
+export function normalizeSphere(input?: string): string | undefined {
+  if (!input || input === "none") return undefined
+  const norm = normalizeText(input)
+  for (const [key, val] of Object.entries(SPHERES_I18N)) {
+    if (
+      normalizeText(key) === norm ||
+      normalizeText(val.en) === norm ||
+      normalizeText(val.ko) === norm ||
+      val.aliases?.some((a) => normalizeText(a) === norm)
+    ) {
+      return key
+    }
+  }
+  return input
+}
+
+export function normalizeType(input: string): string {
+  const norm = normalizeText(input)
+  for (const [key, val] of Object.entries(CARD_TYPES_I18N)) {
+    if (
+      normalizeText(key) === norm ||
+      normalizeText(val.en) === norm ||
+      normalizeText(val.ko) === norm ||
+      val.aliases?.some((a) => normalizeText(a) === norm)
+    ) {
+      return key
+    }
+  }
+  return input
+}
+
 export function getSphereName(sphere?: string, locale: Locale = "ko"): string {
   if (!sphere) return "-"
-  return SPHERES_I18N[sphere]?.[locale] ?? sphere
+  const key = normalizeSphere(sphere)
+  if (!key) return "-"
+  const entry = SPHERES_I18N[key as keyof typeof SPHERES_I18N]
+  return entry ? entry[locale] : sphere
 }
 
 export function getTypeName(type: string, locale: Locale = "ko"): string {
-  return CARD_TYPES_I18N[type]?.[locale] ?? type
+  const key = normalizeType(type)
+  const entry = CARD_TYPES_I18N[key as keyof typeof CARD_TYPES_I18N]
+  return entry ? entry[locale] : type
 }
 
 export function getSetName(

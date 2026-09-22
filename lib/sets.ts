@@ -40,6 +40,29 @@ export const cardSchema = z.preprocess(
           raw.traits = parsed.length > 0 ? parsed : undefined
         }
       }
+      if (typeof raw.type === "string") {
+        const typeMap: Record<string, string> = {
+          영웅: "Hero",
+          동료: "Ally",
+          부속: "Attachment",
+          사건: "Event",
+          적: "Enemy",
+          장소: "Location",
+          배반: "Treachery",
+          퀘스트: "Quest",
+        }
+        raw.type = typeMap[raw.type] ?? raw.type
+      }
+      if (typeof raw.sphere === "string") {
+        const sphereMap: Record<string, string> = {
+          지도력: "Leadership",
+          전술: "Tactics",
+          정신: "Spirit",
+          지식: "Lore",
+          중립: "Neutral",
+        }
+        raw.sphere = sphereMap[raw.sphere] ?? raw.sphere
+      }
       if (raw.unique !== undefined) {
         raw.unique = Boolean(raw.unique)
       }
