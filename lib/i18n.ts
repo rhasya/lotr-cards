@@ -169,6 +169,8 @@ export const UI_I18N = {
     number: { ko: "카드 번호", en: "Card Number" },
     code: { ko: "카드 코드", en: "Card Code" },
     imagePlaceholder: { ko: "이미지 준비 중", en: "Image not available" },
+    cardText: { ko: "카드 효과", en: "Card Text" },
+    flavorText: { ko: "배경 텍스트", en: "Flavor Text" },
   },
 } as const
 
@@ -231,6 +233,20 @@ export function getCardTraits(card: Card, locale: Locale): string[] {
     return card.traits
   }
   return (card.traitsEn ?? []).map((t) => translateTrait(t, "ko"))
+}
+
+export function getCardText(card: Card, locale: Locale): string | undefined {
+  if (locale === "en") {
+    return card.textEn || card.text
+  }
+  return card.text || card.textEn
+}
+
+export function getCardFlavor(card: Card, locale: Locale): string | undefined {
+  if (locale === "en") {
+    return card.flavorEn || card.flavor
+  }
+  return card.flavor || card.flavorEn
 }
 
 export function normalizeSphere(input?: string): string | undefined {

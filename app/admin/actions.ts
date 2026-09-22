@@ -17,6 +17,10 @@ export async function saveCardAction(
     revalidatePath("/admin")
     revalidatePath("/sets")
     revalidatePath(`/sets/${cardData.set.toLowerCase()}`)
+    revalidatePath(`/cards/${cardData.code.toLowerCase()}`)
+    if (originalCode && originalCode.toLowerCase() !== cardData.code.toLowerCase()) {
+      revalidatePath(`/cards/${originalCode.toLowerCase()}`)
+    }
     revalidatePath("/")
   }
   return result
@@ -33,6 +37,7 @@ export async function deleteCardAction(
     if (setCode) {
       revalidatePath(`/sets/${setCode.toLowerCase()}`)
     }
+    revalidatePath(`/cards/${code.toLowerCase()}`)
     revalidatePath("/")
   }
   return result

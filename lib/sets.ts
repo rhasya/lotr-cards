@@ -67,6 +67,18 @@ export const cardSchema = z.preprocess(
       if (raw.unique !== undefined) {
         raw.unique = Boolean(raw.unique)
       }
+      if (typeof raw.text === "string" && !raw.text.trim()) {
+        raw.text = undefined
+      }
+      if (typeof raw.textEn === "string" && !raw.textEn.trim()) {
+        raw.textEn = undefined
+      }
+      if (typeof raw.flavor === "string" && !raw.flavor.trim()) {
+        raw.flavor = undefined
+      }
+      if (typeof raw.flavorEn === "string" && !raw.flavorEn.trim()) {
+        raw.flavorEn = undefined
+      }
       return raw
     }
     return input
@@ -80,6 +92,10 @@ export const cardSchema = z.preprocess(
     sphere: z.string().optional(),
     traits: z.array(z.string()).optional(),
     traitsEn: z.array(z.string()).optional(),
+    text: z.string().optional(),
+    textEn: z.string().optional(),
+    flavor: z.string().optional(),
+    flavorEn: z.string().optional(),
     unique: z.boolean().optional(),
     cost: z.number().int().optional(),
     threat: z.number().int().optional(),

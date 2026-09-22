@@ -13,6 +13,10 @@ export type Card = {
   sphere?: string
   traits?: string[]
   traitsEn?: string[]
+  text?: string
+  textEn?: string
+  flavor?: string
+  flavorEn?: string
   unique?: boolean
   cost?: number
   threat?: number

@@ -30,6 +30,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -94,6 +95,10 @@ type CardFormData = {
   sphere: string
   traits: string
   traitsEn: string
+  text: string
+  textEn: string
+  flavor: string
+  flavorEn: string
   unique: boolean
   cost: string
   threat: string
@@ -113,6 +118,10 @@ const emptyForm: CardFormData = {
   sphere: "none",
   traits: "",
   traitsEn: "",
+  text: "",
+  textEn: "",
+  flavor: "",
+  flavorEn: "",
   unique: false,
   cost: "",
   threat: "",
@@ -175,6 +184,10 @@ export function AdminCardManager({
       sphere: card.sphere ? (normalizeSphere(card.sphere) ?? card.sphere) : "none",
       traits: card.traits ? card.traits.join(", ") : "",
       traitsEn: card.traitsEn ? card.traitsEn.join(", ") : "",
+      text: card.text || "",
+      textEn: card.textEn || "",
+      flavor: card.flavor || "",
+      flavorEn: card.flavorEn || "",
       unique: Boolean(card.unique),
       cost: card.cost !== undefined ? String(card.cost) : "",
       threat: card.threat !== undefined ? String(card.threat) : "",
@@ -267,6 +280,10 @@ export function AdminCardManager({
           : undefined,
       traits: parsedTraits.length > 0 ? parsedTraits : undefined,
       traitsEn: finalTraitsEn,
+      text: formData.text.trim() || undefined,
+      textEn: formData.textEn.trim() || undefined,
+      flavor: formData.flavor.trim() || undefined,
+      flavorEn: formData.flavorEn.trim() || undefined,
       unique: formData.unique ? true : undefined,
       cost: formData.cost !== "" ? parseInt(formData.cost, 10) : undefined,
       threat:
@@ -611,7 +628,7 @@ export function AdminCardManager({
 
       {/* Add / Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-xl">
+        <DialogContent className="sm:max-w-2xl">
           <form onSubmit={handleSave}>
             <DialogHeader>
               <DialogTitle>
@@ -941,6 +958,91 @@ export function AdminCardManager({
                         }
                         placeholder="-"
                         className="h-8"
+                      />
+                    </Field>
+                  </div>
+                </div>
+
+                {/* Text & Flavor Fields */}
+                <div className="space-y-3 rounded-lg border bg-muted/20 p-3">
+                  <div className="flex flex-wrap items-center justify-between gap-1 text-xs text-muted-foreground">
+                    <span className="font-medium">
+                      카드 텍스트 & 플레이버 텍스트 (한국어 / 영문)
+                    </span>
+                    <span className="text-[11px] text-muted-foreground/80">
+                      **볼드** (예: **행동:**, **반응:**) 및 *이탤릭* 지원
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <Field>
+                      <FieldLabel htmlFor="card-text">
+                        카드 텍스트 (한글)
+                      </FieldLabel>
+                      <Textarea
+                        id="card-text"
+                        value={formData.text}
+                        onChange={(e) =>
+                          setFormData((p) => ({ ...p, text: e.target.value }))
+                        }
+                        placeholder="예: **행동:** 영웅을 소진하여 자원 1개를 추가합니다."
+                        rows={3}
+                      />
+                    </Field>
+
+                    <Field>
+                      <FieldLabel htmlFor="card-text-en">
+                        카드 텍스트 (영문)
+                      </FieldLabel>
+                      <Textarea
+                        id="card-text-en"
+                        value={formData.textEn}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            textEn: e.target.value,
+                          }))
+                        }
+                        placeholder="e.g. **Action:** Exhaust a hero to add 1 resource."
+                        rows={3}
+                      />
+                    </Field>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <Field>
+                      <FieldLabel htmlFor="card-flavor">
+                        플레이버 텍스트 (한글)
+                      </FieldLabel>
+                      <Textarea
+                        id="card-flavor"
+                        value={formData.flavor}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            flavor: e.target.value,
+                          }))
+                        }
+                        placeholder="분위기 및 인용 문구 입력..."
+                        rows={2}
+                      />
+                    </Field>
+
+                    <Field>
+                      <FieldLabel htmlFor="card-flavor-en">
+                        플레이버 텍스트 (영문)
+                      </FieldLabel>
+                      <Textarea
+                        id="card-flavor-en"
+                        value={formData.flavorEn}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            flavorEn: e.target.value,
+                          }))
+                        }
+                        placeholder="Enter English flavor text..."
+                        rows={2}
                       />
                     </Field>
                   </div>

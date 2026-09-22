@@ -15,10 +15,13 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { RingMark } from "@/components/ring-mark"
 import { UniqueMark } from "@/components/unique-mark"
+import { FormattedCardText } from "@/components/formatted-card-text"
 import { useLanguage } from "@/components/language-provider"
 import {
   getCardDisplayName,
+  getCardFlavor,
   getCardSubName,
+  getCardText,
   getCardTraits,
   getSetName,
   getSphereName,
@@ -86,6 +89,8 @@ export function CardDetailView({
   const sphereName = card.sphere ? getSphereName(card.sphere, locale) : undefined
   const typeName = getTypeName(card.type, locale)
   const setName = set ? getSetName(set, locale) : card.set
+  const text = getCardText(card, locale)
+  const flavor = getCardFlavor(card, locale)
 
   const gradientClass =
     (sphereKey && sphereGradients[sphereKey]) ||
@@ -248,6 +253,25 @@ export function CardDetailView({
               />
             </div>
           </div>
+
+          {/* Card Text & Flavor */}
+          {(text || flavor) && (
+            <div className="rounded-xl border bg-card/60 p-5 space-y-3.5 text-card-foreground">
+              {text && (
+                <FormattedCardText
+                  text={text}
+                  className="text-sm font-normal"
+                />
+              )}
+              {text && flavor && <hr className="border-border/60" />}
+              {flavor && (
+                <FormattedCardText
+                  text={flavor}
+                  className="text-sm italic text-muted-foreground"
+                />
+              )}
+            </div>
+          )}
 
           {/* Meta Information */}
           <div className="rounded-xl border bg-muted/20 p-4">
