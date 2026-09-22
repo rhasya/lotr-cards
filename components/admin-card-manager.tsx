@@ -46,7 +46,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import type { Card, SetInfo } from "@/lib/sets"
+import type { Card, SetInfo } from "@/lib/types"
 import { deleteCardAction, saveCardAction } from "@/app/admin/actions"
 
 const sphereStyles: Record<string, string> = {
@@ -79,9 +79,11 @@ type CardFormData = {
   code: string
   number: string
   name: string
+  nameEn: string
   type: string
   sphere: string
   traits: string
+  traitsEn: string
   cost: string
   threat: string
   willpower: string
@@ -95,9 +97,11 @@ const emptyForm: CardFormData = {
   code: "",
   number: "",
   name: "",
+  nameEn: "",
   type: "영웅",
   sphere: "none",
   traits: "",
+  traitsEn: "",
   cost: "",
   threat: "",
   willpower: "",
@@ -153,9 +157,11 @@ export function AdminCardManager({
       code: card.code,
       number: String(card.number),
       name: card.name,
+      nameEn: card.nameEn || "",
       type: card.type,
       sphere: card.sphere || "none",
       traits: card.traits ? card.traits.join(", ") : "",
+      traitsEn: card.traitsEn ? card.traitsEn.join(", ") : "",
       cost: card.cost !== undefined ? String(card.cost) : "",
       threat: card.threat !== undefined ? String(card.threat) : "",
       willpower: card.willpower !== undefined ? String(card.willpower) : "",
@@ -222,10 +228,16 @@ export function AdminCardManager({
       .map((t) => t.trim())
       .filter(Boolean)
 
+    const parsedTraitsEn = formData.traitsEn
+      .split(/[,.]/)
+      .map((t) => t.trim())
+      .filter(Boolean)
+
     const cardPayload: Card = {
       code: formData.code.trim(),
       number: num,
       name: formData.name.trim(),
+      nameEn: formData.nameEn.trim() || undefined,
       type: formData.type.trim(),
       set: formData.set.trim(),
       sphere:
@@ -233,6 +245,7 @@ export function AdminCardManager({
           ? formData.sphere
           : undefined,
       traits: parsedTraits.length > 0 ? parsedTraits : undefined,
+      traitsEn: parsedTraitsEn.length > 0 ? parsedTraitsEn : undefined,
       cost: formData.cost !== "" ? parseInt(formData.cost, 10) : undefined,
       threat:
         formData.threat !== "" ? parseInt(formData.threat, 10) : undefined,
@@ -294,10 +307,22 @@ export function AdminCardManager({
     if (search.trim()) {
       const q = search.trim().toLowerCase()
       const matchName = card.name.toLowerCase().includes(q)
+      const matchNameEn = card.nameEn?.toLowerCase().includes(q)
       const matchCode = card.code.toLowerCase().includes(q)
       const matchType = card.type.toLowerCase().includes(q)
       const matchTraits = card.traits?.some((t) => t.toLowerCase().includes(q))
-      if (!matchName && !matchCode && !matchType && !matchTraits) return false
+      const matchTraitsEn = card.traitsEn?.some((t) =>
+        t.toLowerCase().includes(q)
+      )
+      if (
+        !matchName &&
+        !matchNameEn &&
+        !matchCode &&
+        !matchType &&
+        !matchTraits &&
+        !matchTraitsEn
+      )
+        return false
     }
     return true
   })
@@ -468,7 +493,14 @@ export function AdminCardManager({
                   <TableCell className="text-muted-foreground tabular-nums">
                     {card.number}
                   </TableCell>
-                  <TableCell className="font-medium">{card.name}</TableCell>
+                  <TableCell>
+                    <div className="font-medium">{card.name}</div>
+                    {card.nameEn && (
+                      <div className="text-xs text-muted-foreground">
+                        {card.nameEn}
+                      </div>
+                    )}
+                  </TableCell>
                   <TableCell className="text-muted-foreground">
                     {card.type}
                   </TableCell>
@@ -609,9 +641,9 @@ export function AdminCardManager({
                   </Field>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  <Field className="sm:col-span-1">
-                    <FieldLabel htmlFor="card-name">카드명</FieldLabel>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <Field>
+                    <FieldLabel htmlFor="card-name">카드명 (한글)</FieldLabel>
                     <Input
                       id="card-name"
                       value={formData.name}
@@ -623,6 +655,22 @@ export function AdminCardManager({
                     />
                   </Field>
 
+                  <Field>
+                    <FieldLabel htmlFor="card-name-en">
+                      영문 카드명 (선택)
+                    </FieldLabel>
+                    <Input
+                      id="card-name-en"
+                      value={formData.nameEn}
+                      onChange={(e) =>
+                        setFormData((p) => ({ ...p, nameEn: e.target.value }))
+                      }
+                      placeholder="예: Aragorn"
+                    />
+                  </Field>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <Field>
                     <FieldLabel htmlFor="card-type">타입</FieldLabel>
                     <Select
@@ -678,17 +726,35 @@ export function AdminCardManager({
                   </Field>
                 </div>
 
-                <Field>
-                  <FieldLabel htmlFor="card-traits">특성 (쉼표로 구분)</FieldLabel>
-                  <Input
-                    id="card-traits"
-                    value={formData.traits}
-                    onChange={(e) =>
-                      setFormData((p) => ({ ...p, traits: e.target.value }))
-                    }
-                    placeholder="예: 두네다인, 귀족, 순찰자"
-                  />
-                </Field>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <Field>
+                    <FieldLabel htmlFor="card-traits">
+                      특성 (한글, 쉼표 구분)
+                    </FieldLabel>
+                    <Input
+                      id="card-traits"
+                      value={formData.traits}
+                      onChange={(e) =>
+                        setFormData((p) => ({ ...p, traits: e.target.value }))
+                      }
+                      placeholder="예: 두네다인, 귀족, 순찰자"
+                    />
+                  </Field>
+
+                  <Field>
+                    <FieldLabel htmlFor="card-traits-en">
+                      영문 특성 (선택, 쉼표 구분)
+                    </FieldLabel>
+                    <Input
+                      id="card-traits-en"
+                      value={formData.traitsEn}
+                      onChange={(e) =>
+                        setFormData((p) => ({ ...p, traitsEn: e.target.value }))
+                      }
+                      placeholder="예: Dúnedain, Noble, Ranger"
+                    />
+                  </Field>
+                </div>
 
                 {/* Stats Grid */}
                 <div className="rounded-lg border bg-muted/30 p-3">

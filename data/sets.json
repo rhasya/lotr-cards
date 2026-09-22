@@ -1,4 +1,4 @@
 [
-  { "code": "RCS", "name": "개정 코어셋" },
-  { "code": "EMT", "name": "회색 산맥" }
+  { "code": "RCS", "name": "개정 코어셋", "nameEn": "Revised Core Set" },
+  { "code": "EMT", "name": "회색 산맥", "nameEn": "Ered Mithrin" }
 ]

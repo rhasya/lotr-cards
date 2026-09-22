@@ -8,31 +8,39 @@ import { z } from "zod"
 const setSchema = z.object({
   code: z.string(),
   name: z.string(),
+  nameEn: z.string().optional(),
 })
 
 export const cardSchema = z.preprocess(
   (input) => {
     if (typeof input === "object" && input !== null) {
-      const raw = input as Record<string, unknown>
+      const raw = { ...(input as Record<string, unknown>) }
       if (typeof raw.traits === "string") {
         const parsed = raw.traits
           .split(/[,.]/)
           .map((s) => s.trim())
           .filter(Boolean)
-        return { ...raw, traits: parsed.length > 0 ? parsed : undefined }
+        raw.traits = parsed.length > 0 ? parsed : undefined
+      }
+      if (typeof raw.traitsEn === "string") {
+        const parsed = raw.traitsEn
+          .split(/[,.]/)
+          .map((s) => s.trim())
+          .filter(Boolean)
+        raw.traitsEn = parsed.length > 0 ? parsed : undefined
       }
       if (raw.trait !== undefined && raw.traits === undefined) {
         if (Array.isArray(raw.trait)) {
-          return { ...raw, traits: raw.trait }
-        }
-        if (typeof raw.trait === "string") {
+          raw.traits = raw.trait
+        } else if (typeof raw.trait === "string") {
           const parsed = raw.trait
             .split(/[,.]/)
             .map((s) => s.trim())
             .filter(Boolean)
-          return { ...raw, traits: parsed.length > 0 ? parsed : undefined }
+          raw.traits = parsed.length > 0 ? parsed : undefined
         }
       }
+      return raw
     }
     return input
   },
@@ -40,9 +48,11 @@ export const cardSchema = z.preprocess(
     code: z.string().min(1, "카드 코드를 입력해주세요"),
     number: z.number().int(),
     name: z.string().min(1, "카드명을 입력해주세요"),
+    nameEn: z.string().optional(),
     type: z.string().min(1, "타입을 입력해주세요"),
     sphere: z.string().optional(),
     traits: z.array(z.string()).optional(),
+    traitsEn: z.array(z.string()).optional(),
     cost: z.number().int().optional(),
     threat: z.number().int().optional(),
     willpower: z.number().int().optional(),
@@ -164,9 +174,7 @@ export function getCard(
   return { card, set }
 }
 
-export function setPath(code: string): string {
-  return `/sets/${code.toLowerCase()}`
-}
+export { setPath, cardPath } from "@/lib/types"
 
 export function saveCard(
   cardData: Card,

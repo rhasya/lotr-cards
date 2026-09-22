@@ -9,8 +9,11 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group"
+import { useLanguage } from "@/components/language-provider"
+import { UI_I18N } from "@/lib/i18n"
 
 export function CardSearchForm() {
+  const { locale } = useLanguage()
   const [query, setQuery] = useState("")
   const isEmpty = query.trim().length === 0
 
@@ -24,7 +27,7 @@ export function CardSearchForm() {
         <InputGroupInput
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="카드 이름, 종족, 진영으로 검색..."
+          placeholder={UI_I18N.home.searchPlaceholder[locale]}
         />
         <InputGroupAddon align="inline-end">
           <InputGroupButton

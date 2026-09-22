@@ -1,4 +1,5 @@
 import { CardSearchForm } from "@/components/card-search-form"
+import { HomeSubtitle } from "@/components/home-subtitle"
 import { RingMark } from "@/components/ring-mark"
 
 export default function Page() {
@@ -12,9 +13,7 @@ export default function Page() {
             [LCG]
           </span>
         </h1>
-        <p className="max-w-md text-sm text-muted-foreground sm:text-base">
-          중간계의 모든 카드를 한 곳에서 찾아보세요.
-        </p>
+        <HomeSubtitle />
       </div>
 
       <CardSearchForm />

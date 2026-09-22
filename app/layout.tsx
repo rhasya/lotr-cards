@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Noto_Sans } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { LanguageProvider } from "@/components/language-provider"
 import { SiteNavbar } from "@/components/site-navbar"
 import { cn } from "@/lib/utils";
 
@@ -19,14 +20,16 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ko"
       suppressHydrationWarning
       className={cn("antialiased", fontMono.variable, "font-sans", notoSans.variable)}
     >
       <body>
         <ThemeProvider>
-          <SiteNavbar />
-          {children}
+          <LanguageProvider>
+            <SiteNavbar />
+            {children}
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>
