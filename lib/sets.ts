@@ -40,6 +40,9 @@ export const cardSchema = z.preprocess(
           raw.traits = parsed.length > 0 ? parsed : undefined
         }
       }
+      if (raw.unique !== undefined) {
+        raw.unique = Boolean(raw.unique)
+      }
       return raw
     }
     return input
@@ -53,6 +56,7 @@ export const cardSchema = z.preprocess(
     sphere: z.string().optional(),
     traits: z.array(z.string()).optional(),
     traitsEn: z.array(z.string()).optional(),
+    unique: z.boolean().optional(),
     cost: z.number().int().optional(),
     threat: z.number().int().optional(),
     willpower: z.number().int().optional(),

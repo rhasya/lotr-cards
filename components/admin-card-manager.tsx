@@ -48,6 +48,7 @@ import {
 } from "@/components/ui/table"
 import type { Card, SetInfo } from "@/lib/types"
 import { translateTrait } from "@/lib/i18n"
+import { UniqueMark } from "@/components/unique-mark"
 import { deleteCardAction, saveCardAction } from "@/app/admin/actions"
 
 const sphereStyles: Record<string, string> = {
@@ -85,6 +86,7 @@ type CardFormData = {
   sphere: string
   traits: string
   traitsEn: string
+  unique: boolean
   cost: string
   threat: string
   willpower: string
@@ -103,6 +105,7 @@ const emptyForm: CardFormData = {
   sphere: "none",
   traits: "",
   traitsEn: "",
+  unique: true,
   cost: "",
   threat: "",
   willpower: "",
@@ -163,6 +166,7 @@ export function AdminCardManager({
       sphere: card.sphere || "none",
       traits: card.traits ? card.traits.join(", ") : "",
       traitsEn: card.traitsEn ? card.traitsEn.join(", ") : "",
+      unique: Boolean(card.unique),
       cost: card.cost !== undefined ? String(card.cost) : "",
       threat: card.threat !== undefined ? String(card.threat) : "",
       willpower: card.willpower !== undefined ? String(card.willpower) : "",
@@ -254,6 +258,7 @@ export function AdminCardManager({
           : undefined,
       traits: parsedTraits.length > 0 ? parsedTraits : undefined,
       traitsEn: finalTraitsEn,
+      unique: formData.unique ? true : undefined,
       cost: formData.cost !== "" ? parseInt(formData.cost, 10) : undefined,
       threat:
         formData.threat !== "" ? parseInt(formData.threat, 10) : undefined,
@@ -508,10 +513,16 @@ export function AdminCardManager({
                     {card.number}
                   </TableCell>
                   <TableCell>
-                    <div className="font-medium">{card.name}</div>
+                    <div className="flex items-center gap-1.5 font-medium">
+                      {card.unique && <UniqueMark className="text-xs" />}
+                      <span>{card.name}</span>
+                    </div>
                     {card.nameEn && (
-                      <div className="text-xs text-muted-foreground">
-                        {card.nameEn}
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        {card.unique && (
+                          <UniqueMark className="text-[10px] text-muted-foreground/70" />
+                        )}
+                        <span>{card.nameEn}</span>
                       </div>
                     )}
                   </TableCell>
@@ -738,6 +749,28 @@ export function AdminCardManager({
                       </SelectContent>
                     </Select>
                   </Field>
+                </div>
+
+                <div className="flex items-center gap-2 rounded-lg border bg-muted/20 px-3 py-2">
+                  <input
+                    type="checkbox"
+                    id="card-unique"
+                    checked={formData.unique}
+                    onChange={(e) =>
+                      setFormData((p) => ({ ...p, unique: e.target.checked }))
+                    }
+                    className="size-4 cursor-pointer rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                  <label
+                    htmlFor="card-unique"
+                    className="flex cursor-pointer items-center gap-1.5 text-sm font-medium"
+                  >
+                    <UniqueMark className="text-sm" />
+                    <span>고유 카드 (Unique)</span>
+                    <span className="text-xs font-normal text-muted-foreground">
+                      - 이름 앞에 ✦ 기호가 표시됩니다
+                    </span>
+                  </label>
                 </div>
 
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

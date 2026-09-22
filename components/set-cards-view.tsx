@@ -11,6 +11,7 @@ import {
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { UniqueMark } from "@/components/unique-mark"
 import {
   Table,
   TableBody,
@@ -112,17 +113,20 @@ export function SetCardsView({ set }: { set: Set }) {
             return (
               <TableRow key={card.code}>
                 <TableCell>
-                  <Link
-                    href={`/cards/${card.code.toLowerCase()}`}
-                    className="font-medium hover:underline"
-                  >
-                    {displayName}
-                  </Link>
-                  {subName && (
-                    <span className="ml-2 text-xs text-muted-foreground">
-                      {subName}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-1.5">
+                    {card.unique && <UniqueMark className="text-xs" />}
+                    <Link
+                      href={`/cards/${card.code.toLowerCase()}`}
+                      className="font-medium hover:underline"
+                    >
+                      {displayName}
+                    </Link>
+                    {subName && (
+                      <span className="text-xs text-muted-foreground">
+                        {subName}
+                      </span>
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell>
                   {card.sphere && sphereName ? (

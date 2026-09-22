@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { RingMark } from "@/components/ring-mark"
+import { UniqueMark } from "@/components/unique-mark"
 import { useLanguage } from "@/components/language-provider"
 import {
   getCardDisplayName,
@@ -129,7 +130,10 @@ export function CardDetailView({
 
             {/* Bottom row */}
             <div className="space-y-1 rounded-xl border border-border/40 bg-background/60 p-3 backdrop-blur-sm">
-              <p className="truncate text-sm font-semibold">{displayName}</p>
+              <p className="flex items-center gap-1.5 truncate text-sm font-semibold">
+                {card.unique && <UniqueMark className="text-xs" />}
+                <span className="truncate">{displayName}</span>
+              </p>
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>{typeName}</span>
                 {sphereName && <span>{sphereName}</span>}
@@ -151,15 +155,30 @@ export function CardDetailView({
                   {sphereName}
                 </Badge>
               )}
+              {card.unique && (
+                <Badge
+                  variant="outline"
+                  className="gap-1 border-amber-500/40 text-amber-600 dark:text-amber-400 font-normal"
+                >
+                  <UniqueMark className="text-xs" />
+                  {locale === "en" ? "Unique" : "고유 카드"}
+                </Badge>
+              )}
             </div>
 
             <div className="space-y-1">
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                {displayName}
+              <h1 className="flex items-baseline gap-2 text-3xl font-bold tracking-tight sm:text-4xl">
+                {card.unique && (
+                  <UniqueMark className="text-2xl text-amber-500 sm:text-3xl" />
+                )}
+                <span>{displayName}</span>
               </h1>
               {subName && (
-                <p className="text-sm font-medium text-muted-foreground">
-                  {subName}
+                <p className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
+                  {card.unique && (
+                    <UniqueMark className="text-xs text-muted-foreground/80" />
+                  )}
+                  <span>{subName}</span>
                 </p>
               )}
             </div>
