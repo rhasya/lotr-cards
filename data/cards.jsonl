@@ -1,15 +1,15 @@
-{"code":"RCS-001","number":1,"name":"아라곤","type":"영웅","sphere":"지도력","set":"RCS","threat":12,"willpower":2,"attack":3,"defense":2,"hitpoints":5}
-{"code":"RCS-002","number":2,"name":"보로미르","type":"영웅","sphere":"지도력","set":"RCS","threat":8,"willpower":1}
-{"code":"RCS-003","number":3,"name":"테오드레드","type":"영웅","sphere":"지도력","set":"RCS","threat":9,"willpower":2}
-{"code":"RCS-004","number":4,"name":"레골라스","type":"영웅","sphere":"전술","set":"RCS","threat":11,"willpower":2}
-{"code":"RCS-005","number":5,"name":"김리","type":"영웅","sphere":"전술","set":"RCS","threat":9,"willpower":1}
-{"code":"RCS-006","number":6,"name":"타린","type":"영웅","sphere":"전술","set":"RCS","threat":9,"willpower":1}
-{"code":"RCS-007","number":7,"name":"에오윈","type":"영웅","sphere":"정신","set":"RCS","threat":9,"willpower":4}
-{"code":"RCS-008","number":8,"name":"엘레노르","type":"영웅","sphere":"정신","set":"RCS","threat":7,"willpower":1}
-{"code":"RCS-009","number":9,"name":"프로도","type":"영웅","sphere":"정신","set":"RCS","threat":8,"willpower":1}
-{"code":"RCS-010","number":10,"name":"글로르핀델","type":"영웅","sphere":"지식","set":"RCS","threat":8,"willpower":1}
-{"code":"RCS-011","number":11,"name":"데네소르","type":"영웅","sphere":"지식","set":"RCS","threat":12,"willpower":3}
-{"code":"RCS-012","number":12,"name":"빌보","type":"영웅","sphere":"지식","set":"RCS","threat":10,"willpower":2}
 {"code":"EMT-001","number":1,"name":"다인 아이언풋","type":"영웅","sphere":"지도력","set":"EMT"}
 {"code":"EMT-002","number":2,"name":"브랜드","type":"영웅","sphere":"지도력","set":"EMT"}
 {"code":"EMT-003","number":3,"name":"회색 산맥 오크","type":"적","set":"EMT"}
+{"code":"RCS-001","number":1,"name":"아라곤","type":"영웅","sphere":"지도력","threat":12,"willpower":2,"attack":3,"defense":2,"hitpoints":5,"set":"RCS"}
+{"code":"RCS-002","number":2,"name":"세오드레드","type":"영웅","sphere":"지도력","threat":8,"willpower":1,"attack":2,"defense":1,"hitpoints":4,"set":"RCS"}
+{"code":"RCS-003","number":3,"name":"글로인","type":"영웅","sphere":"지도력","threat":9,"willpower":2,"attack":2,"defense":1,"hitpoints":4,"set":"RCS"}
+{"code":"RCS-004","number":4,"name":"김리","type":"영웅","sphere":"전술","threat":11,"willpower":2,"attack":2,"defense":2,"hitpoints":5,"set":"RCS"}
+{"code":"RCS-005","number":5,"name":"레골라스","type":"영웅","sphere":"전술","threat":9,"willpower":1,"attack":3,"defense":1,"hitpoints":4,"set":"RCS"}
+{"code":"RCS-006","number":6,"name":"살린","type":"영웅","sphere":"전술","threat":9,"willpower":1,"attack":2,"defense":2,"hitpoints":4,"set":"RCS"}
+{"code":"RCS-007","number":7,"name":"에오윈","type":"영웅","sphere":"정신","threat":9,"willpower":4,"attack":1,"defense":1,"hitpoints":3,"set":"RCS"}
+{"code":"RCS-008","number":8,"name":"엘레아노르","type":"영웅","sphere":"정신","threat":7,"willpower":1,"attack":1,"defense":2,"hitpoints":3,"set":"RCS"}
+{"code":"RCS-009","number":9,"name":"둔헤레","type":"영웅","sphere":"정신","threat":8,"willpower":1,"attack":2,"defense":1,"hitpoints":4,"set":"RCS"}
+{"code":"RCS-010","number":10,"name":"데네소르","type":"영웅","sphere":"지식","threat":8,"willpower":1,"attack":1,"defense":3,"hitpoints":3,"set":"RCS"}
+{"code":"RCS-011","number":11,"name":"글로르핀델","type":"영웅","sphere":"지식","threat":12,"willpower":3,"attack":3,"defense":1,"hitpoints":5,"set":"RCS"}
+{"code":"RCS-012","number":12,"name":"베라보르","type":"영웅","sphere":"지식","threat":10,"willpower":2,"attack":2,"defense":2,"hitpoints":4,"set":"RCS"}

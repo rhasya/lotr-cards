@@ -23,6 +23,13 @@ export function SiteNavbar() {
           >
             Sets
           </Button>
+          <Button
+            variant="ghost"
+            nativeButton={false}
+            render={<Link href="/admin" />}
+          >
+            카드 관리
+          </Button>
         </nav>
       </div>
     </header>

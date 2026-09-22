@@ -1,6 +1,6 @@
 import "server-only"
 
-import { readFileSync, watch } from "node:fs"
+import { readFileSync, writeFileSync, watch } from "node:fs"
 import { join } from "node:path"
 
 import { z } from "zod"
@@ -10,11 +10,11 @@ const setSchema = z.object({
   name: z.string(),
 })
 
-const cardSchema = z.object({
-  code: z.string(),
+export const cardSchema = z.object({
+  code: z.string().min(1, "카드 코드를 입력해주세요"),
   number: z.number().int(),
-  name: z.string(),
-  type: z.string(),
+  name: z.string().min(1, "카드명을 입력해주세요"),
+  type: z.string().min(1, "타입을 입력해주세요"),
   sphere: z.string().optional(),
   cost: z.number().int().optional(),
   threat: z.number().int().optional(),
@@ -22,7 +22,7 @@ const cardSchema = z.object({
   attack: z.number().int().optional(),
   defense: z.number().int().optional(),
   hitpoints: z.number().int().optional(),
-  set: z.string(),
+  set: z.string().min(1, "세트를 선택해주세요"),
 })
 
 export type SetInfo = z.infer<typeof setSchema>
@@ -33,6 +33,7 @@ type Data = {
   sets: Set[]
   setsByCode: Map<string, SetInfo>
   cardsBySet: Map<string, Card[]>
+  allCards: Card[]
 }
 
 const dataDir = join(process.cwd(), "data")
@@ -44,6 +45,11 @@ function readJsonl(filePath: string): unknown[] {
     .map((line) => line.trim())
     .filter((line) => line.length > 0)
     .map((line) => JSON.parse(line))
+}
+
+function writeJsonl(filePath: string, items: unknown[]): void {
+  const content = items.map((item) => JSON.stringify(item)).join("\n") + "\n"
+  writeFileSync(filePath, content, "utf8")
 }
 
 function load(): Data {
@@ -73,6 +79,7 @@ function load(): Data {
     })),
     setsByCode: new Map(setList.map((set) => [set.code.toLowerCase(), set])),
     cardsBySet,
+    allCards: cardList,
   }
 }
 
@@ -104,6 +111,10 @@ export function getSets(): Set[] {
   return getData().sets
 }
 
+export function getAllCards(): Card[] {
+  return getData().allCards
+}
+
 export function getSet(code: string): Set | undefined {
   const { setsByCode, cardsBySet } = getData()
   const set = setsByCode.get(code.toLowerCase())
@@ -115,4 +126,85 @@ export function getSet(code: string): Set | undefined {
 
 export function setPath(code: string): string {
   return `/sets/${code.toLowerCase()}`
+}
+
+export function saveCard(
+  cardData: Card,
+  originalCode?: string
+): { success: boolean; error?: string } {
+  try {
+    const validated = cardSchema.parse(cardData)
+    const filePath = join(dataDir, "cards.jsonl")
+    const cardList = z.array(cardSchema).parse(readJsonl(filePath))
+
+    const isEdit = Boolean(originalCode)
+    const existingIndex = isEdit
+      ? cardList.findIndex(
+          (c) => c.code.toLowerCase() === originalCode?.toLowerCase()
+        )
+      : -1
+
+    // If adding new, or if code was changed during edit, check for duplicate
+    if (
+      !isEdit ||
+      (originalCode &&
+        originalCode.toLowerCase() !== validated.code.toLowerCase())
+    ) {
+      const duplicate = cardList.find(
+        (c) => c.code.toLowerCase() === validated.code.toLowerCase()
+      )
+      if (duplicate) {
+        return {
+          success: false,
+          error: `이미 존재하는 카드 코드입니다: ${validated.code}`,
+        }
+      }
+    }
+
+    if (isEdit && existingIndex >= 0) {
+      cardList[existingIndex] = validated
+    } else {
+      cardList.push(validated)
+    }
+
+    // Sort cards by set, then number
+    cardList.sort((a, b) => {
+      if (a.set !== b.set) return a.set.localeCompare(b.set)
+      return a.number - b.number
+    })
+
+    writeJsonl(filePath, cardList)
+    data = null
+    return { success: true }
+  } catch (err) {
+    return {
+      success: false,
+      error:
+        err instanceof Error ? err.message : "저장 중 오류가 발생했습니다.",
+    }
+  }
+}
+
+export function deleteCard(code: string): { success: boolean; error?: string } {
+  try {
+    const filePath = join(dataDir, "cards.jsonl")
+    const cardList = z.array(cardSchema).parse(readJsonl(filePath))
+
+    const filtered = cardList.filter(
+      (c) => c.code.toLowerCase() !== code.toLowerCase()
+    )
+    if (filtered.length === cardList.length) {
+      return { success: false, error: "카드를 찾을 수 없습니다." }
+    }
+
+    writeJsonl(filePath, filtered)
+    data = null
+    return { success: true }
+  } catch (err) {
+    return {
+      success: false,
+      error:
+        err instanceof Error ? err.message : "삭제 중 오류가 발생했습니다.",
+    }
+  }
 }
